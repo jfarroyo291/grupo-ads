@@ -1,0 +1,25 @@
+{
+    "env": {
+        "node": true,
+        "es2021": true
+    },
+    "extends": ["standard", "eslint-config-prettier"],
+    "settings": {
+        "import/resolver": {
+            "node": {
+            "moduleDirectory": ["src", "node_modules"]
+            }
+        }
+    },
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-underscore-dangle": 0,
+        "no-param-reassign": 0,
+        "import/no-unresolved": 0
+    }
+}
