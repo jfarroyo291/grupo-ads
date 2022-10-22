@@ -16,7 +16,7 @@ const router = Router();
 
 router.get("/vehicles", getVehicle);
 router.get("/superheroes", getSuperheroes);
-router.post("/superhero", postSuperhero);
-router.put("/superhero/:id", updateSuperhero);
+router.post("/superheroes", postSuperhero);
+router.put("/superheroes/:id", updateSuperhero);
 
 module.exports = router;
