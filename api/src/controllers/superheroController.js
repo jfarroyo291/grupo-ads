@@ -1,6 +1,4 @@
 require("dotenv").config();
-// const axios = require("axios");
-// const fetch = require("node-fetch");
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
 const { Superhero, Vehicle } = require("../db");
@@ -32,44 +30,28 @@ const uploadSuperheroes = async (req, res) => {
 
 const getSuperheroes = async (req, res, next) => {
   const { name, location } = req.query;
-  if (name) {
+  if (name || location) {
     try {
-      let searchForName = await Superhero.findAll({
+      let search = await Superhero.findAll({
         where: {
-          name: { [Op.iLike]: `%${name}` },
+          [Op.or]: [
+            { name: { [Op.iLike]: `%${name}` } },
+            { location: { [Op.iLike]: `%${location}` } },
+          ],
         },
-        /* include: {
-          model: Vehicle,
-          attributes: ["name"],
-          through: {
-            attributes: [],
-          },
-        }, */
       });
-      return res.status(200).send(searchForName);
+      if (search.length === 0) {
+        return res.status(404).send("Not found");
+      }
+      return res.status(200).send(search);
     } catch {
+      //next(error);
       res.status(400).send("SORRY!! Something went wrong in your search!");
-    }
-  }
-  if (location) {
-    try {
-      console.log(location);
-      let searchForLocation = await Superhero.findAll({
-        where: {
-          location: {
-            [Op.iLike]: `%${location}`,
-          },
-        },
-      });
-      return res.status(200).send(searchForLocation);
-    } catch (error) {
-      next(error);
-      // res.status(400).send("SORRY!! Something went wrong in your search!");
     }
   } else {
     try {
       const superheroesTotal = await Superhero.findAll({
-        limit: 100,
+        limit: 500,
       });
       res.status(200).send(superheroesTotal);
     } catch {
@@ -110,7 +92,6 @@ const postSuperhero = async (req, res, next) => {
         image,
       });
       newSuperhero.addVehicle(getVehicleDB);
-      //console.log(newSuperhero);
       return res.status(200).send(newSuperhero);
     }
   } catch {
